@@ -1,13 +1,15 @@
 package uk.gov.hmrc.softdrinksindustrylevy.tests
 
 import play.api.test.WsTestClient
-import uk.gov.hmrc.softdrinksindustrylevy.support.{SDILActions, IntegrationSpec}
+import uk.gov.hmrc.softdrinksindustrylevy.support.{IntegrationSpec, SDILActions}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
 
 class MainSpec extends IntegrationSpec {
+
+  private val timeout: FiniteDuration = 50000.milliseconds
 
 
   "Visiting Google address" should "return a 200 OK response" in {
@@ -19,12 +21,12 @@ class MainSpec extends IntegrationSpec {
     }
   }
 
-  "BARS" should "return a 200 OK response with a valid sort code and account number" in {
+  "DES stub" should "return a true response" in {
     WsTestClient.withClient { client =>
       val result = Await.result(
-        new SDILActions(client).getBank("123456", "12345678"), 10.seconds)
-      result.statusText shouldBe "OK"
-      result.status shouldBe 200
+        new SDILActions(client).postDesStub(), timeout)
+      result shouldBe "true"
+      println(result)
     }
   }
 
